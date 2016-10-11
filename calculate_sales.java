@@ -11,11 +11,11 @@ public class calculate_sales {
 	public static void main(String[]args) {
 		//(例外がありえるからtry必要
 		
-		//1.1：2.1 表示
 		
 		//1.2　Mapを使用
 		HashMap<String, String> map = new HashMap <String, String>();
 		
+		//1.1：2.1 表示
 		try{
 			//ファイルを開く(支店定義）(エスケープシーケンス)(txtファイルじゃないためtxtいらない)
 			//文字列の受け取り
@@ -28,11 +28,7 @@ public class calculate_sales {
 			//内容がnullじゃなかったら保持して表示
 			while((b = bh.readLine()) != null){
 				String[] bran = b.split(",", 0);
-				map.put("支店コード", bran[0]);
-				map.put("支店名",bran[1]);
-				System.out.println(map.entrySet());
-				
-				
+				map.put(bran[0], bran[1]);
 			}
 			//while((c = cd.readLine()) != null){
 				//String[] commod = c.split(",", 0);
@@ -53,8 +49,8 @@ public class calculate_sales {
 			System.out.print(e);
 		}
 		
-		System.out.println(map);
-    	
+		
+    	System.out.println(map);
 	}
 }
 		
