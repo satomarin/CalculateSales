@@ -23,7 +23,7 @@ public class calculate_sales {
 		
 		
 		//1.1支店定義ファイルがあるかの確認
-		File file = new File(args[0]+ "\\branch.lst");
+		File file = new File(args[0] + File.separator + "branch.lst");
 		if (!( file.exists())){
 			System.out.println("支店定義ファイルが存在しません。");
 			return;
@@ -49,7 +49,7 @@ public class calculate_sales {
 			
 			//ファイルを開く(支店定義）(エスケープシーケンス)
 			//文字列の受け取り
-			bh = new BufferedReader(new FileReader (args[0] + "\\branch.lst"));
+			bh = new BufferedReader(new FileReader (args[0] + File.separator +"branch.lst"));
 			
 			String b;
 			
@@ -77,7 +77,6 @@ public class calculate_sales {
 		}catch(IOException e){
 			//5.もし何かしらで動かなかった場合の対処
 			System.out.println("予期せぬエラーが発生しました");
-			System.out.print(e);
 			
 		}finally{
 			
@@ -89,14 +88,14 @@ public class calculate_sales {
 				
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
 			}
 		}
 		
 		
 		
 		//商品定義ファイルがあるかの確認
-		File file1 = new File(args[0]+ "\\commodity.lst");
+		File file1 = new File(args[0]+ File.separator + "commodity.lst");
 		if (!file1.exists()){
 			System.out.println("商品定義ファイルが存在しません。");
 			return;
@@ -120,7 +119,7 @@ public class calculate_sales {
 		try{
 			//ファイルを開く(支店定義）(エスケープシーケンス)
 			//文字列の受け取り
-			cd = new BufferedReader(new FileReader (args[0] + "\\commodity.lst"));
+			cd = new BufferedReader(new FileReader (args[0] + File.separator + "commodity.lst"));
 
 			String c;
 
@@ -149,7 +148,6 @@ public class calculate_sales {
 			
 			//もし何かしらで動かなかった場合の対処
 			System.out.println("予期せぬエラーが発生しました");
-			System.out.print(e);
 			
 		}finally{
 			
@@ -161,7 +159,7 @@ public class calculate_sales {
 				
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
 			}
 		}
 		
@@ -252,7 +250,7 @@ public class calculate_sales {
 				if (!(branch.containsKey(branchcode))){
 					System.out.println("売上ファイルの支店コードが不正です");
 				}
-				if(!(commodity.containsKey(productcode))){
+				if (!(commodity.containsKey(productcode))){
 					System.out.println("売上ファイルの商品コードが不正です");
 				}
 				
@@ -283,7 +281,6 @@ public class calculate_sales {
 			
 			//もし何かしらで動かなかった場合の対処
 			System.out.println("予期せぬエラーが発生しました");
-			System.out.print(e);
 			
 		}finally{
 			
@@ -294,7 +291,7 @@ public class calculate_sales {
 				}
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
 			}
 		}
 		
@@ -307,13 +304,15 @@ public class calculate_sales {
 		
 		
 		try {
-			File newfile = new File (args[0] + "\\branch.out");
+			
+			File newfile = new File (args[0] + File.separator +"branch.out");
+			//5.
 			if (!(newfile.createNewFile())){
 				System.out.println("予期せぬエラーが発生しました。(ファイルの作成に失敗しました)");
 			}
 			
 			//書き込みの宣言
-			fw = new FileWriter(args[0] + "\\branch.out");
+			fw = new FileWriter(args[0] + File.separator +"branch.out");
 			
 			
 			//List作成
@@ -328,12 +327,12 @@ public class calculate_sales {
 			//書き込み
 			//1つのkey・2つのmapからデータの取り出し
 			for(Entry<String, Long> bar : entries){
-				fw.write(bar.getKey() + "," + branch.get(bar.getKey()) + "," + bar.getValue()+ "\r\n" );
+				fw.write(bar.getKey() + "," + branch.get(bar.getKey()) + "," + bar.getValue() + System.getProperty("line.separator"));
+				
 			}
 			
 		}catch(IOException e){
 			System.out.println("例外が発生しました");
-			System.out.println(e);
 		
 		}finally{
 			
@@ -344,7 +343,7 @@ public class calculate_sales {
 				}
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
 			}
 		}
 		
@@ -356,14 +355,14 @@ public class calculate_sales {
 		
 		try {
 			
-			File newfile1 = new File (args[0] + "\\commodity.out");
-			//コメントいる?いらない？
+			File newfile1 = new File (args[0] + File.separator +"commodity.out");
+			//5.
 			if (!(newfile1.createNewFile())){
 				System.out.println("予期せぬエラーが発生しました。(ファイルの作成に失敗しました)");
 			}
 			
 			//書き込みの宣言
-			fw1 = new FileWriter(args[0] + "\\commodity.out");
+			fw1 = new FileWriter(args[0] + File.separator + "commodity.out");
 			
 			
 			//List作成
@@ -378,13 +377,13 @@ public class calculate_sales {
 			//書き込み
 			//1つのkey・2つのmapからデータの取り出し
 			for(Entry<String, Long> ber : entries1){
-				fw1.write(ber.getKey() + "," + commodity.get(ber.getKey()) + "," + ber.getValue()+ "\r\n" );
+				fw1.write(ber.getKey() + "," + commodity.get(ber.getKey()) + "," + ber.getValue() + System.getProperty("line.separator") );
+				
 			}
 			
 		}catch(IOException e){
 			
 			System.out.println("予期せぬエラーが発生しました");
-			System.out.println(e);
 			
 		}finally{
 			
@@ -395,7 +394,7 @@ public class calculate_sales {
 				}
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
+				System.out.println("予期せぬエラーが発生しました");
 			}
 		}
 		
