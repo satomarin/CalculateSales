@@ -3,22 +3,33 @@ package jp.co.iccom.sato_marin.calculate_sales;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 public class calculate_sales {
 
 	public static void main(String[]args) {
-
-		//支店定義ファイルがあるかの確認
+		
+		
+		//5.コマンドライン引数が定義されていない
+		if(args.length == 0){
+			System.out.println("予期せぬエラーが発生しました");
+		}
+		
+		
+		//1.1支店定義ファイルがあるかの確認
 		File file = new File(args[0]+ "\\branch.lst");
 		if (!( file.exists())){
 			System.out.println("支店定義ファイルが存在しません。");
 			return;
 		}
-
-		//(例外がありえるからtry必要
+		
+		
 		//1.2　Mapを使用
 		HashMap<String, String> branch = new HashMap <String, String>();
 		
@@ -28,12 +39,17 @@ public class calculate_sales {
 		HashMap<String, Long> branchrevenue = new HashMap <String, Long>(0);
 		
 		
+		//宣言
+		BufferedReader bh = null;
 		
+		
+		//(例外がありえるからtry必要
 		//1.1　表示
 		try{
-			//ファイルを開く(支店定義）(エスケープシーケンス)(txtファイルじゃないためtxtいらない)
+			
+			//ファイルを開く(支店定義）(エスケープシーケンス)
 			//文字列の受け取り
-			BufferedReader bh = new BufferedReader(new FileReader (args[0] + "\\branch.lst"));
+			bh = new BufferedReader(new FileReader (args[0] + "\\branch.lst"));
 			
 			String b;
 			
@@ -57,20 +73,25 @@ public class calculate_sales {
 				branchrevenue.put(bran[0], 0l);
 			}
 			
-			//確認表示
-			System.out.println(branchrevenue);
-
-			//内容がnullになったらストリームを閉じる　必ず必要
-			bh.close();
-
+			
 		}catch(IOException e){
-			//もし何かしらで動かなかった場合の対処
+			//5.もし何かしらで動かなかった場合の対処
+			System.out.println("予期せぬエラーが発生しました");
 			System.out.print(e);
+			
+		}finally{
+			
+			//内容がnullになったらストリームを閉じる　必ず必要
+			try {
+				if(bh != null){
+					bh.close();
+				}
+				
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
 		}
-
-		System.out.println(branch);
-		
-		
 		
 		
 		
@@ -80,7 +101,8 @@ public class calculate_sales {
 			System.out.println("商品定義ファイルが存在しません。");
 			return;
 		}
-
+		
+		
 		//2.2　Mapを使用
 		HashMap<String, String>commodity = new HashMap <String, String>();
 		
@@ -90,11 +112,15 @@ public class calculate_sales {
 		HashMap<String, Long> productrevenue = new HashMap <String, Long>();
 		
 		
+		//宣言
+		BufferedReader cd = null;
+		
+		
 		//2.1　表示
 		try{
-			//ファイルを開く(支店定義）(エスケープシーケンス)(txtファイルじゃないためtxtいらない)
+			//ファイルを開く(支店定義）(エスケープシーケンス)
 			//文字列の受け取り
-			BufferedReader cd = new BufferedReader(new FileReader (args[0] + "\\commodity.lst"));
+			cd = new BufferedReader(new FileReader (args[0] + "\\commodity.lst"));
 
 			String c;
 
@@ -118,18 +144,28 @@ public class calculate_sales {
 				productrevenue.put(commod[0], 0l);
 			}
 			
-			//確認表示
-			System.out.println(productrevenue);
-
-			//内容がnullになったらストリームを閉じる
-			cd.close();
-
+			
 		}catch(IOException e){
+			
 			//もし何かしらで動かなかった場合の対処
+			System.out.println("予期せぬエラーが発生しました");
 			System.out.print(e);
+			
+		}finally{
+			
+			//内容がnullになったらストリームを閉じる　必ず必要
+			try {
+				if(cd != null){
+					cd.close();
+				}
+				
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
 		}
 		
-		System.out.println(commodity);
+		
 		
 		
 		//3.1
@@ -145,11 +181,6 @@ public class calculate_sales {
 		List<String> rcdname = new ArrayList<String>();
 		
 		
-		//取得した一覧を表示
-		for(int i = 0; i < files1.length; i++){
-			System.out.println("ファイル" + (i+1) + "→" + files1[i]);
-		}
-		
 		
 		//ファイル名から.rcdを厳選
 		for(int i = 0; i < files1.length; i++){
@@ -157,20 +188,16 @@ public class calculate_sales {
 			//getNameメソッドを使ってfiles1[]をString型に変更
 			//→matchesでファイル名.rcdを厳選
 			if(files1[i].getName().matches("\\d{8}"+".rcd")){
-				System.out.println(files1[i]);
 				
 				//List:rcdに.rcdファイルを格納
 				rcd.add(files1[i]);
 				
 				//List:rcdnameにファイル名の拡数字のみを格納
 				rcdname.add(files1[i].getName().substring(0,8));
+				
 			}
 		}
 		
-		
-		//確認表示
-		System.out.println(rcd);
-		System.out.println(rcdname);
 		
 		
 		//rcdnameを使わないと↓
@@ -192,9 +219,6 @@ public class calculate_sales {
 		long brevenue = 0;//支店-合計金額
 		long prevenue = 0;//商品-合計金額
 		
-		for (int i = 0; i < rcd.size(); i++){
-			System.out.println(rcd.get(i));
-		}
 		
 		String r;
 		BufferedReader rd = null;
@@ -214,25 +238,22 @@ public class calculate_sales {
 				}
 				
 				if(datafile.size() != 3){
-					System.out.println("datafileのフォーマットが不正です");
+					System.out.println("売上ファイルのフォーマットが不正です");
 				}
 				
-				//確認表示
-				System.out.println(datafile);
 				
 				//各種データを各変数に格納
 				branchcode = datafile.get(0);
-				System.out.println(branchcode);//確認表示
 				productcode = datafile.get(1);
 				revenue1 = Long.parseLong(datafile.get(2));
 				
 				
 				//上記データと1/2の定義ファイルのmapを比較、各項目がちゃんとあるか確認
 				if (!(branch.containsKey(branchcode))){
-					System.out.println("該当ファイル名の支店コードが不正です");
+					System.out.println("売上ファイルの支店コードが不正です");
 				}
 				if(!(commodity.containsKey(productcode))){
-					System.out.println("該当ファイル名の商品コードが不正です");
+					System.out.println("売上ファイルの商品コードが不正です");
 				}
 				
 				
@@ -254,32 +275,129 @@ public class calculate_sales {
 				productrevenue.put (productcode , prevenue);
 				
 				
-				//確認表示
-				System.out.println(branchrevenue);
-				System.out.println(productrevenue);
-				
 				
 			}
-			//内容がnullになったらストリームを閉じる
-			rd.close();
 		
 		
 		}catch(IOException e){
+			
 			//もし何かしらで動かなかった場合の対処
+			System.out.println("予期せぬエラーが発生しました");
 			System.out.print(e);
+			
+		}finally{
+			
+			//内容がnullになったらストリームを閉じる　必ず必要
+			try {
+				if(rd != null){
+					rd.close();
+				}
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
 		}
 		
 		
 		//4.出力
 		//ファイルを作る
-		File newfile = new File (args[0] + "branch.out");
+		//支店別集計ファイルの作成
 		
-		File newfile1 = new File (args[0] + "commodity.out");
-		
-		
+		FileWriter fw = null;
 		
 		
+		try {
+			File newfile = new File (args[0] + "\\branch.out");
+			if (!(newfile.createNewFile())){
+				System.out.println("予期せぬエラーが発生しました。(ファイルの作成に失敗しました)");
+			}
+			
+			//書き込みの宣言
+			fw = new FileWriter(args[0] + "\\branch.out");
+			
+			
+			//List作成
+			List<Entry<String, Long>> entries = new ArrayList<Entry<String, Long>>(branchrevenue.entrySet());
+			Collections.sort(entries, new Comparator<Entry<String, Long>>() {
+				//comparatorで値の比較
+				public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
+					return o2.getValue().compareTo(o1.getValue());   //降順
+				}
+			});
+			
+			//書き込み
+			//1つのkey・2つのmapからデータの取り出し
+			for(Entry<String, Long> bar : entries){
+				fw.write(bar.getKey() + "," + branch.get(bar.getKey()) + "," + bar.getValue()+ "\r\n" );
+			}
+			
+		}catch(IOException e){
+			System.out.println("例外が発生しました");
+			System.out.println(e);
 		
+		}finally{
+			
+			//内容がnullになったらストリームを閉じる　必ず必要
+			try {
+				if(fw != null){
+					fw.close();
+				}
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+		}
+		
+		
+		//4.2商品別集計ファイルの作成
+		
+		FileWriter fw1 = null;
+		
+		
+		try {
+			
+			File newfile1 = new File (args[0] + "\\commodity.out");
+			//コメントいる?いらない？
+			if (!(newfile1.createNewFile())){
+				System.out.println("予期せぬエラーが発生しました。(ファイルの作成に失敗しました)");
+			}
+			
+			//書き込みの宣言
+			fw1 = new FileWriter(args[0] + "\\commodity.out");
+			
+			
+			//List作成
+			List<Entry<String, Long>> entries1 = new ArrayList<Entry<String, Long>>(productrevenue.entrySet());
+			Collections.sort(entries1, new Comparator<Entry<String, Long>>() {
+				//comparatorで値の比較
+				public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
+					return o2.getValue().compareTo(o1.getValue());   //降順
+				}
+			});
+			
+			//書き込み
+			//1つのkey・2つのmapからデータの取り出し
+			for(Entry<String, Long> ber : entries1){
+				fw1.write(ber.getKey() + "," + commodity.get(ber.getKey()) + "," + ber.getValue()+ "\r\n" );
+			}
+			
+		}catch(IOException e){
+			
+			System.out.println("予期せぬエラーが発生しました");
+			System.out.println(e);
+			
+		}finally{
+			
+			//内容がnullになったらストリームを閉じる　必ず必要
+			try {
+				if(fw1 != null){
+					fw1.close();
+				}
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+		}
 		
 	}
 }
