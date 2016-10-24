@@ -11,14 +11,21 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-public class calculate_sales {
+public class CalculateSales {
 
 	public static void main(String[]args) {
 		
 		
 		//5.コマンドライン引数が定義されていない
-		if(args.length == 0){
+		if(args.length != 1){
 			System.out.println("予期せぬエラーが発生しました");
+			return;
+		}
+		
+		//5.args[0]があるかないか
+		if(args[0] == null){
+			System.out.println("予期せぬエラーが発生しました");
+			return;
 		}
 		
 		
@@ -77,6 +84,7 @@ public class calculate_sales {
 		}catch(IOException e){
 			//5.もし何かしらで動かなかった場合の対処
 			System.out.println("予期せぬエラーが発生しました");
+			return;
 			
 		}finally{
 			
@@ -89,6 +97,7 @@ public class calculate_sales {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 		}
 		
@@ -108,7 +117,7 @@ public class calculate_sales {
 		
 		//3.2　Mapを使用
 		//商品-合計金額
-		HashMap<String, Long> productrevenue = new HashMap <String, Long>();
+		HashMap<String, Long>productrevenue = new HashMap <String, Long>();
 		
 		
 		//宣言
@@ -129,12 +138,12 @@ public class calculate_sales {
 				String[] commod = c.split(",", 0);
 				//英数字計8桁
 				if(!commod[0] .matches("^[a-zA-Z0-9]{8}$")){
-					System.out.println("1商店定義ファイルのフォーマットが不正です");
+					System.out.println("商品定義ファイルのフォーマットが不正です");
 					return;
 				}
 				//配列が2個
 				if( commod.length != 2){
-					System.out.println("商店定義ファイルのフォーマットが不正です");
+					System.out.println("商品定義ファイルのフォーマットが不正です");
 					return;
 				}
 				commodity.put(commod[0], commod[1]);
@@ -148,6 +157,7 @@ public class calculate_sales {
 			
 			//もし何かしらで動かなかった場合の対処
 			System.out.println("予期せぬエラーが発生しました");
+			return;
 			
 		}finally{
 			
@@ -160,6 +170,7 @@ public class calculate_sales {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 		}
 		
@@ -177,6 +188,8 @@ public class calculate_sales {
 		
 		//List宣言 rcdname
 		List<String> rcdname = new ArrayList<String>();
+		
+		
 		
 		
 		
@@ -202,7 +215,9 @@ public class calculate_sales {
 		//rcd.get(rcd.size() -1).getName().substring(0,8)
 		//ファイルが歯抜けになっているか（1からファイルが始まる時のみ稼動）
 		//（例えば10からファイル名が始まる時にどうするのかも追加したい）
+		
 		if(rcdname.size() != Integer.valueOf(rcdname.get(rcdname.size()-1))){
+			//if(rcds.isDirectory)
 			System.out.println("売上ファイル名が連番になっていません");
 			return;
 		}
@@ -237,6 +252,7 @@ public class calculate_sales {
 				
 				if(datafile.size() != 3){
 					System.out.println("売上ファイルのフォーマットが不正です");
+					return;
 				}
 				
 				
@@ -249,9 +265,11 @@ public class calculate_sales {
 				//上記データと1/2の定義ファイルのmapを比較、各項目がちゃんとあるか確認
 				if (!(branch.containsKey(branchcode))){
 					System.out.println("売上ファイルの支店コードが不正です");
+					return;
 				}
 				if (!(commodity.containsKey(productcode))){
 					System.out.println("売上ファイルの商品コードが不正です");
+					return;
 				}
 				
 				
@@ -281,6 +299,7 @@ public class calculate_sales {
 			
 			//もし何かしらで動かなかった場合の対処
 			System.out.println("予期せぬエラーが発生しました");
+			return;
 			
 		}finally{
 			
@@ -292,6 +311,7 @@ public class calculate_sales {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 		}
 		
@@ -308,7 +328,8 @@ public class calculate_sales {
 			File newfile = new File (args[0] + File.separator +"branch.out");
 			//5.
 			if (!(newfile.createNewFile())){
-				System.out.println("予期せぬエラーが発生しました。(ファイルの作成に失敗しました)");
+				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 			
 			//書き込みの宣言
@@ -317,7 +338,7 @@ public class calculate_sales {
 			
 			//List作成
 			List<Entry<String, Long>> entries = new ArrayList<Entry<String, Long>>(branchrevenue.entrySet());
-			Collections.sort(entries, new Comparator<Entry<String, Long>>() {
+			Collections.sort(entries,new Comparator<Entry<String, Long>>() {
 				//comparatorで値の比較
 				public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
 					return o2.getValue().compareTo(o1.getValue());   //降順
@@ -333,6 +354,7 @@ public class calculate_sales {
 			
 		}catch(IOException e){
 			System.out.println("例外が発生しました");
+			return;
 		
 		}finally{
 			
@@ -344,6 +366,7 @@ public class calculate_sales {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 		}
 		
@@ -358,7 +381,8 @@ public class calculate_sales {
 			File newfile1 = new File (args[0] + File.separator +"commodity.out");
 			//5.
 			if (!(newfile1.createNewFile())){
-				System.out.println("予期せぬエラーが発生しました。(ファイルの作成に失敗しました)");
+				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 			
 			//書き込みの宣言
@@ -384,6 +408,7 @@ public class calculate_sales {
 		}catch(IOException e){
 			
 			System.out.println("予期せぬエラーが発生しました");
+			return;
 			
 		}finally{
 			
@@ -395,6 +420,7 @@ public class calculate_sales {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				System.out.println("予期せぬエラーが発生しました");
+				return;
 			}
 		}
 		
